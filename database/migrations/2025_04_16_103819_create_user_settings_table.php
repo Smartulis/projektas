@@ -15,12 +15,8 @@ return new class extends Migration
             $table->string('language', 2)->default('en');
             $table->unsignedInteger('default_valid_until')->default(14);
             $table->unsignedInteger('default_due_date')->default(14);
-            $table->text('payment_terms')->default('100_0');
-            $table->json('tax_rates')->default(json_encode([
-                '0.21' => '21%',
-                '0.09' => '9%',
-                '0.00' => '0%',
-            ]));
+            $table->text('payment_terms')->nullable();
+            $table->json('tax_rates')->nullable();
             $table->string('default_tax_rate')->default('0');
             $table->string('estimate_prefix')->default('EST');
             $table->string('estimate_number_format')->default('{prefix}-{date}-{counter}');
