@@ -16,5 +16,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(MeasurementUnitsTableSeeder::class);
         $this->call(ProductsServicesSeeder::class);
+
+        // Sukuria admin userį, jei jo dar nėra
+        \App\Models\User::firstOrCreate([
+            'email' => 'kokosas@geriausias.com',
+        ], [
+            'name' => 'Admin',
+            'password' => bcrypt('kok0sas2002'), // PASIKEISK!
+        ]);
     }
 }
