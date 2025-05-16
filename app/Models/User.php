@@ -2,44 +2,29 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\UserSetting;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\UserSetting;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -48,7 +33,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function settings()
+    public function settings(): HasOne
     {
         return $this->hasOne(UserSetting::class);
     }
@@ -57,5 +42,16 @@ class User extends Authenticatable
     {
         return $this->settings()->firstOrCreate();
     }
-    
+
+    /**
+     * Filament panelės prieigos leidimas
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Laikinai leidžiam visiems prisijungti
+        return true;
+
+        // Arba jei nori tikrinti el. pašto domeną ir patvirtinimą:
+        // return str_ends_with($this->email, '@tavodomenas.lt') && $this->hasVerifiedEmail();
+    }
 }
